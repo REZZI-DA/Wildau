@@ -1,0 +1,65 @@
+
+plugins {
+    id 'java'
+  id 'org.springframework.boot' version '3.2.1'
+  id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.github.ben-manes.versions' version '0.39.0'
+    id 'com.github.node-gradle.node' version '7.0.1'
+}
+group = 'wildau.web.live'
+version = '0.0.1-SNAPSHOT'
+
+java {
+  sourceCompatibility = '17'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
+}
+dependencies {
+   
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.h2database:h2'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+}
+
+
+
+task copyVueBuild(type: Copy) {
+     //dependsOn 'npmBuild'
+    from 'frontend/dist'
+    into 'src/main/resources/static'
+    doLast {
+        println "Copying Vue.js files..."
+        println "Source directory: ${projectDir}/frontend/dist"
+        println "Destination directory: ${buildDir}/resources/main/static"
+    }
+}
+
+// task npmBuild(type: NpmTask) {
+//     workingDir = file("${project.projectDir}/frontend")
+//     description = 'Führt npm-Build durch'
+//     group = 'build'
+//     args = ['run', 'build']  // Passe dies an, wenn dein Build-Skript einen anderen Befehl verwendet
+// }
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+//compileJava.dependsOn npmBuild
+processResources.dependsOn copyVueBuild
+tasks.named('bootBuildImage') {
+  builder = 'paketobuildpacks/builder-jammy-base:latest'
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}
+
+
