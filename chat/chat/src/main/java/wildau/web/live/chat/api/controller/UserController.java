@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 
 import org.springframework.web.bind.annotation.RestController;
@@ -55,7 +53,7 @@ public class UserController {
    @PostMapping("/")
     public ResponseEntity<String> registerNewUser(@RequestBody UserEntity newUser) {
         try {
-            userService.registerNewUser(newUser);
+            userService.addUser(newUser);
             return ResponseEntity.ok("User registered successfully");
         } catch (Exception e) {
             // Handle exceptions (e.g., validation errors, database errors) and return an appropriate response
@@ -80,11 +78,11 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, Boolean> deleteEmployee(@PathVariable(value = "id") Long id)
+    public Map<String, Boolean> deleteUser(@PathVariable(value = "id") Long id)
     throws ResponseStatusException {
         // check if exsit 
          UserEntity user = userService.getUserById(id)
-         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found for this id :: " + id));
+         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found for this id : " + id));
         
         userService.deleteUser(id);
         Map<String, Boolean> response = new HashMap<>();
