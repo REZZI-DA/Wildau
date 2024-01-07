@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import wildau.web.live.chat.api.model.SearchListOfEntitys;
 
+import wildau.web.live.chat.api.model.ListOfEntitys;
+import wildau.web.live.chat.api.model.SearchListOfEntitys;
+import wildau.web.live.chat.api.model.ListOfEntitys;
+import wildau.web.live.chat.api.model.SearchListOfEntitys;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
@@ -42,27 +45,23 @@ public class UserController {
         return userService.getUserById(id).orElse(new UserEntity());        
     }
 
-    @GetMapping("/search")
-    public SearchListOfEntitys searchUsername (@RequestParam String name){  
-        SearchListOfEntitys search = new SearchListOfEntitys();
-        search.results = userService.getUserByNames(name).size();
-        search.data = userService.getUserByNames(name);
-        return search;
-    }
-
-
-    @GetMapping("/all")
-    public ResponseEntity<List<UserEntity>> getAllUsers(){
   
-         try {
-            List<UserEntity> users = userService.getAllUsers();
-            return ResponseEntity.status(HttpStatus.OK).body(users);
-         } catch (Exception e) {
-             // Handle exceptions (e.g., validation errors, database errors) and return an appropriate response
-             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ArrayList<UserEntity>());
-         }
-    }
 
+
+   @GetMapping("/all")
+    public ListOfEntitys getAllUsers(){
+         ListOfEntitys payload = new ListOfEntitys();
+        try {
+        payload.status="ok";
+        payload.data=userService.getAllUsers();
+        return payload;    
+        } catch (Exception e) {
+            // Handle exceptions (e.g., validation errors, database errors) and return an appropriate response
+            payload.status ="ERROR: " + e.getMessage();
+            return payload;
+            
+        }
+    }
 
  
 
@@ -116,6 +115,19 @@ public class UserController {
         } catch (UserEntityNotFoundException ex) {
             response.put("message", ex.getMessage()); 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+    @GetMapping("/search")
+    public SearchListOfEntitys searchUsername (@RequestParam String name)
+    {   
+        SearchListOfEntitys search = new SearchListOfEntitys();
+        try{
+        search.results = "" + userService.getUserByNames(name).size();
+        search.data = userService.getUserByNames(name);
+        return search;
+        }catch(Exception e){
+            search.results = "Error: " + e.getMessage();
+            return search;
         }
     }
 }
