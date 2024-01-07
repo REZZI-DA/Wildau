@@ -86,7 +86,7 @@ public class UserController {
     public Map<String, Boolean> deleteUser(@PathVariable(value = "id") Long id)
     throws ResponseStatusException {
         // check if exsit 
-         UserEntity user = userService.getUserById(id)
+         userService.getUserById(id)  //deleted User Entity
          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found for this id : " + id));
         
         userService.deleteUser(id);
@@ -96,9 +96,15 @@ public class UserController {
     }
     @GetMapping("/search")
     public SearchListOfEntitys searchUsername (@RequestParam String name)
-    {  SearchListOfEntitys search = new SearchListOfEntitys();
-        search.results = userService.getUserByNames(name).size();
+    {   
+        SearchListOfEntitys search = new SearchListOfEntitys();
+        try{
+        search.results = "" + userService.getUserByNames(name).size();
         search.data = userService.getUserByNames(name);
         return search;
+        }catch(Exception e){
+            search.results = "Error: " + e.getMessage();
+            return search;
+        }
     }
 }

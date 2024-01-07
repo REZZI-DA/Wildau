@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
 import org.apache.coyote.BadRequestException;
-import org.junit.jupiter.api.AfterEach;
+//import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+//import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import wildau.web.live.chat.api.model.UserEntity;
@@ -20,16 +20,16 @@ import wildau.web.live.chat.repository.UserRepository;
 public class UserServiceTest {
 
 
-    @Mock private UserRepository userRepository;
+    @Mock private UserRepository userRepository;   // Mock um das getestete userRepository zu verwenden -> schneller
     private UserService underTest;
 
     @BeforeEach
     void setUp(){
         underTest = new UserService(userRepository); 
     }
+    
 
-
-    @Test
+    @Test  // TODO: testCreateUser == addUser-> delete one Methode
     void testCreateUser() {
 
     }
@@ -38,19 +38,28 @@ public class UserServiceTest {
     void testDeleteUser() {
 
     }
+    @Test
+    void testGetUserByNames(){
+        underTest.getUserByNames(null);
+        verify(userRepository).findAll();
+        underTest.getUserByNames("Keyword");
+        verify(userRepository).search("keyword");
+    }
 
     @Test
     void testGetAllUsers() {
         //when
         underTest.getAllUsers();
         //then
-        verify(userRepository).findAll();
+        verify(userRepository).findAll();  // Überprüft ob findAll aufgerufen wurde -> findAll ist getestet
 
     }
 
     @Test
     void testGetUserById() {
-
+    underTest.getUserById(null);
+        //then
+        verify(userRepository).findById(null);
     }
 
     @Test
