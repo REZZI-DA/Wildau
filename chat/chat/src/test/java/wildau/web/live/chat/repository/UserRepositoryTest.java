@@ -3,7 +3,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import wildau.web.live.chat.api.model.UserEntity;
@@ -21,7 +21,7 @@ public class UserRepositoryTest {
     }
 
 	 @Test
-	 void itShouldAddUser() {
+	 void itShouldCheckWhenUserMailExists() {
 		//given
         UserEntity user = new UserEntity();
         user.setUsername("aliDa");
@@ -30,12 +30,20 @@ public class UserRepositoryTest {
         user.setPhoneNumber("17420499212");
         underTest.save(user);
         // when
-        boolean exists = underTest.selectExistsEmail("ali@gmail.com");
-   
-        assertThat(exists).isTrue();
-        
-        // then
+        boolean excepted = underTest.selectExistsEmail("ali@gmail.com");
+        assertThat(excepted).isTrue();
+    
 	 }
+     @Test
+	 void itShouldCheckWhenUserMailNotExists() {
+		//given
+       String email = "notExists@gmail.com";
+        // when
+        boolean excepted = underTest.selectExistsEmail(email);
+        assertThat(excepted).isFalse();
+    
+	 }
+
 
 
 } 
