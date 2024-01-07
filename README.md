@@ -43,9 +43,11 @@ Verwendete Pakete:
 
 **}**
 
-### ~~config~~
-- ~~CorsConfig.java~~
-- ~~CorsFilter.java~~
+### exceptions
+- UserEntityNotFoundException.java
+	
+### repository
+- UserRepository.java
 
 ### service
 - UserService.java
