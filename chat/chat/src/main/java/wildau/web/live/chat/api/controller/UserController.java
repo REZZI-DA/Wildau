@@ -45,8 +45,6 @@ public class UserController {
         return userService.getUserById(id).orElse(new UserEntity());        
     }
 
-  
-
 
    @GetMapping("/all")
     public ListOfEntitys getAllUsers(){
@@ -63,7 +61,6 @@ public class UserController {
         }
     }
 
- 
 
    @PostMapping("/")
     public ResponseEntity<Map<String, String>> addNewUser(@RequestBody UserEntity newUser) {
