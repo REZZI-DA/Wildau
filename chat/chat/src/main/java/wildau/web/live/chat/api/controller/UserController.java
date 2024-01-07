@@ -1,7 +1,8 @@
 package wildau.web.live.chat.api.controller;
 import wildau.web.live.chat.api.model.UserEntity;
 import wildau.web.live.chat.Service.UserService;
-
+import wildau.web.live.chat.api.model.ListOfEntitys;
+import wildau.web.live.chat.api.model.SearchListOfEntitys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,20 +27,24 @@ public class UserController {
     
     private UserService userService;
 
+   
     @GetMapping("/all")
-    public ResponseEntity<String> getAllUsers(){
-        String users = "";
+    public ListOfEntitys getAllUsers(){
+         ListOfEntitys payload = new ListOfEntitys();
         try {
-            
-           for (var iterable_element : userService.getAllUsers() ) {
-            users += iterable_element.getUsername();
-            users += " , ";
-           }
-           return ResponseEntity.status(HttpStatus.OK).body("USERS: "+ users);
+        payload.status="ok";
+        payload.data=userService.getAllUsers();
+        return payload;    
         } catch (Exception e) {
             // Handle exceptions (e.g., validation errors, database errors) and return an appropriate response
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to register user: " + e.getMessage());
+            payload.status ="ERROR: " + e.getMessage();
+            return payload;
+            
         }
+    }
+    @GetMapping("/user")
+    public UserEntity showUserEntity(@RequestParam long id){
+        return userService.getUserById(id).orElse(new UserEntity());        
     }
 
 
@@ -88,5 +93,12 @@ public class UserController {
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return response;
+    }
+    @GetMapping("/search")
+    public SearchListOfEntitys searchUsername (@RequestParam String name)
+    {  SearchListOfEntitys search = new SearchListOfEntitys();
+        search.results = userService.getUserByNames(name).size();
+        search.data = userService.getUserByNames(name);
+        return search;
     }
 }

@@ -19,6 +19,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    
+    public List<UserEntity> getUserByNames(String keyword){
+        if(keyword !=null) {
+         return userRepository.search(keyword);
+        }
+        return userRepository.findAll();
+     }
+     
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
