@@ -5,7 +5,7 @@
    <div class="table-responsive my-5">
 
     <!-- The table component -->
-     <Table :fields='fields' :userData ="userData"></Table>
+     <Table :userData ="userData"></Table> 
    </div>
 
 </div>
@@ -15,11 +15,11 @@
 
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
-import Table from './components/Table.vue'
+ import Table from './components/Table.vue'
 export default {
   name: 'App',
   components: {
-    Table
+     Table
   },
   data() {
     return {
@@ -37,8 +37,8 @@ export default {
       
      })
        .then(response => {
-         for (let i = 0; i < response.data.length; i++) {
-            this.userData.push(response.data[i]);
+         for (let i = 0; i < response.data.data.length; i++) {
+            this.userData.push(response.data.data[i]);
          }
          console.log('Response:', response.data);
        })
@@ -65,7 +65,11 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  
 }
-
+body{
+    height: 100%;
+    background-color: #FFFEFB;
+}
 
 </style>

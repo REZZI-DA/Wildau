@@ -53,13 +53,13 @@ public class UserServiceTest {
        verify(userRepository,never()).deleteById(any());
  
     }
-    @Test
-    void testGetUserByNames(){
-        underTest.getUserByNames(null);
-        verify(userRepository).findAll();
-        underTest.getUserByNames("Keyword");
-        verify(userRepository).search("keyword");
-    }
+     @Test
+     void testGetUserByNames(){
+         underTest.getUserByNames(null);
+         verify(userRepository).findAll();
+         underTest.getUserByNames("keyword");
+         verify(userRepository).search("keyword");
+     }
 
     @Test
     void testGetAllUsers()  {
